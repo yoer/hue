@@ -40,14 +40,13 @@ from django.core.urlresolvers import resolve
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils.translation import ugettext as _
 from django.utils.http import urlquote, is_safe_url
-from django.utils.encoding import iri_to_uri
 import django.views.static
 
 import desktop.views
 import desktop.conf
 from desktop.context_processors import get_app_name
-from desktop.lib import apputil, i18n
-from desktop.lib.django_util import render, render_json, is_jframe_request, get_username_re_rule, get_groupname_re_rule
+from desktop.lib import apputil, i18n, fsmanager
+from desktop.lib.django_util import render, render_json, get_username_re_rule, get_groupname_re_rule
 from desktop.lib.exceptions import StructuredException
 from desktop.lib.exceptions_renderable import PopupException
 from desktop.log.access import access_log, log_page_hit
@@ -121,10 +120,7 @@ class ClusterMiddleware(object):
     if "fs" in view_kwargs:
       del view_kwargs["fs"]
 
-    try:
-      request.fs = cluster.get_hdfs(request.fs_ref)
-    except KeyError:
-      raise KeyError(_('Cannot find HDFS called "%(fs_ref)s".') % {'fs_ref': request.fs_ref})
+    request.fs = fsmanager.get_filesystem(request.fs_ref)
 
     if request.user.is_authenticated():
       if request.fs is not None:
