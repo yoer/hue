@@ -1786,7 +1786,7 @@ ko.bindingHandlers.aceEditor = {
         this.onClick = this.onClick.bind(this);
         Event.addListener(editor.renderer.scroller, "mousemove", this.onMouseMove);
         Event.addListener(editor.renderer.content, "mouseout", this.onMouseOut);
-        Event.addListener(editor.renderer.content, "dblclick", this.onClick);
+        Event.addListener(editor.renderer.content, "click", this.onClick);
       };
 
       Oop.inherits(HueLink, Tooltip);
@@ -1863,7 +1863,7 @@ ko.bindingHandlers.aceEditor = {
         };
 
         this.onClick = function (e) {
-          if (this.link) {
+          if (this.link && (e.altKey || e.metaKey)) {
             this.link.editor = this.editor;
             this._signal("open", this.link);
             this.clear()
