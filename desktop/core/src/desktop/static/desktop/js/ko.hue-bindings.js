@@ -1732,6 +1732,9 @@ ko.bindingHandlers.aceEditor = {
         placeHolderElement.remove();
         placeHolderVisible = false;
       }
+      if (options.updateOnInput){
+        options.value(editor.getValue());
+      }
     });
 
     editor.on("focus", function () {
@@ -1929,7 +1932,7 @@ ko.bindingHandlers.aceEditor = {
 
     var refreshAutoComplete = function (callback) {
       editor.completers = originalCompleters.slice();
-      if (options.extraCompleters().length > 0) {
+      if (options.extraCompleters && options.extraCompleters().length > 0) {
         options.extraCompleters().forEach(function (complete) {
           editor.completers.push(complete);
         });
@@ -2074,7 +2077,7 @@ ko.bindingHandlers.aceEditor = {
     if (options.aceInstance()) {
       var editor = options.aceInstance();
       editor.completers = element.originalCompleters.slice();
-      if (options.extraCompleters().length > 0) {
+      if (options.extraCompleters && options.extraCompleters().length > 0) {
         options.extraCompleters().forEach(function (complete) {
           editor.completers.push(complete);
         });
